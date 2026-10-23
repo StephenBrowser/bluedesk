@@ -469,6 +469,7 @@
     } else {
       openSearch("https://www.en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
     }
+  }); // <-- Added missing closing brace here
 
   $("searchBack").addEventListener("click", () => {
     if (searchHistory.length > 1) {
