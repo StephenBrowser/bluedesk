@@ -603,19 +603,21 @@
         bing: "https://www.bing.com/search?q=" + encoded,
         yahoo: "https://search.yahoo.com/search?p=" + encoded,
         wikipedia: "https://en.wikipedia.org/w/index.php?search=" + encoded,
-        dogpile: "https://www.dogpile.com/search?q=" + encoded
-        ecosia: "https://www.ecosia.org/search?method=index&ar=1&q=" + encoded
+        dogpile: "https://www.dogpile.com/search?q=" + encoded,
+        ecosia: "https://www.ecosia.org/search?q=" + encoded
       };
 
       const providers = {
         bing: "Bing",
         yahoo: "Yahoo",
-        wikipedia: "Wikipedia"
-        dogpile: "Dogpile"
+        wikipedia: "Wikipedia",
+        dogpile: "Dogpile",
         ecosia: "Ecosia"
       };
 
       openSearch(searchUrls[engine], providers[engine]);
+
+      
     });
 
     $("searchBack").addEventListener("click", () => {
