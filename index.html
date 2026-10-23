@@ -376,6 +376,8 @@
             <option value="bing">Bing</option>
             <option value="yahoo">Yahoo</option>
             <option value="wikipedia">Wikipedia</option>
+            <option value="dogpile">Dogpile</option>
+            <option value="ecosia">Ecosia</option>
           </select>
 
           <button class="primary-btn" type="submit">Search</button>
@@ -600,13 +602,17 @@
       const searchUrls = {
         bing: "https://www.bing.com/search?q=" + encoded,
         yahoo: "https://search.yahoo.com/search?p=" + encoded,
-        wikipedia: "https://en.wikipedia.org/w/index.php?search=" + encoded
+        wikipedia: "https://en.wikipedia.org/w/index.php?search=" + encoded,
+        dogpile: "https://www.dogpile.com/search?q=" + encoded
+        ecosia: "https://www.ecosia.org/search?method=index&ar=1&q=" + encoded
       };
 
       const providers = {
         bing: "Bing",
         yahoo: "Yahoo",
         wikipedia: "Wikipedia"
+        dogpile: "Dogpile"
+        ecosia: "Ecosia"
       };
 
       openSearch(searchUrls[engine], providers[engine]);
