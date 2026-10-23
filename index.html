@@ -1,0 +1,585 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlueDesk — Search & News</title>
+<style>
+  :root {
+    --blue: #1769d2;
+    --deep-blue: #104a9b;
+    --pale-blue: #eaf3ff;
+    --page: #f4f7fc;
+    --white: #fff;
+    --text: #1b2b42;
+    --muted: #718096;
+    --border: #dce5f0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    background: var(--page);
+    color: var(--text);
+    min-width: 850px;
+  }
+
+  header {
+    height: 66px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 42px;
+  }
+
+  .brand {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    letter-spacing: -.5px;
+  }
+
+  .brand span { color: var(--blue); }
+
+  .header-note {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  main {
+    width: min(1080px, calc(100% - 80px));
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 30px 0 24px;
+  }
+
+  .logo-space {
+    width: 100%;
+    height: 105px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .logo-space img {
+    max-height: 100px;
+    max-width: 280px;
+    object-fit: contain;
+  }
+
+  .logo-placeholder {
+    width: 84px;
+    height: 84px;
+    border-radius: 23px;
+    background: linear-gradient(145deg, #2c8aff, #1051ae);
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    box-shadow: 0 8px 22px #1769d233;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    margin: 0 0 23px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .search-wrap {
+    max-width: 760px;
+    margin: auto;
+  }
+
+  .searchbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 8px 7px 18px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 5px 22px #1b47740b;
+  }
+
+  .search-icon { color: var(--muted); font-size: 21px; }
+
+  input, select, button { font: inherit; }
+
+  #searchInput {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    padding: 11px 2px;
+    color: var(--text);
+    font-size: 15px;
+  }
+
+  #searchEngine {
+    border: 1px solid var(--border);
+    background: #f8faff;
+    padding: 10px;
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .primary-btn {
+    border: 0;
+    background: var(--blue);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .primary-btn:hover { background: var(--deep-blue); }
+
+  .quicklinks {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 23px;
+  }
+
+  .quicklink {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    transition: .15s ease;
+  }
+
+  .quicklink:hover {
+    border-color: #9bc4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px #1769d212;
+  }
+
+  .quick-icon {
+    display: block;
+    font-size: 23px;
+    margin-bottom: 8px;
+  }
+
+  .section {
+    margin: 10px 0 35px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .section-heading {
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .section-heading p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .select {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    padding: 9px 10px;
+    max-width: 175px;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .back-btn, .open-btn {
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .back-btn:hover, .open-btn:hover { background: var(--pale-blue); }
+
+  .frame-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: #f9fbff;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .frame-status a { color: var(--blue); }
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: 490px;
+    border: 0;
+    background: white;
+  }
+
+  #newsFrame { height: 430px; }
+
+  .frame-message {
+    display: none;
+    padding: 45px 25px;
+    text-align: center;
+    background: #f9fbff;
+  }
+
+  .frame-message h3 { margin-top: 0; }
+
+  .frame-message p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .frame-message button { margin-top: 8px; }
+
+  footer {
+    padding: 0 0 25px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 950px) {
+    main { width: calc(100% - 40px); }
+    header { padding: 0 20px; }
+    .quicklinks { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Blue<span>Desk</span></div>
+  <div class="header-note">Your search. Your news. One place.</div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="logo-space" id="logoSpace">
+      <!-- Replace this placeholder with your own logo image -->
+      <div class="logo-placeholder">B</div>
+    </div>
+
+    <h1>A better place to start.</h1>
+    <p class="subtitle">Search the web and catch up on the news.</p>
+
+    <div class="search-wrap">
+      <form class="searchbar" id="searchForm">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" type="search"
+          placeholder="Search the web..." autocomplete="off"
+          aria-label="Search the web">
+        <select id="searchEngine" aria-label="Search engine">
+          <option value="bing">Bing</option>
+          <option value="yahoo">Yahoo</option>
+        </select>
+        <button class="primary-btn" type="submit">Search</button>
+      </form>
+    </div>
+
+    <nav class="quicklinks" aria-label="Quick links">
+      <a class="quicklink" href="https://www.gmail.com/">
+        <span class="quick-icon">✉</span>Email
+      </a>
+      <a class="quicklink" href="https://www.youtube.com/">
+        <span class="quick-icon">▶</span>YouTube
+      </a>
+      <a class="quicklink" href="https://www.wikipedia.org/">
+        <span class="quick-icon">◉</span>Wikipedia
+      </a>
+      <a class="quicklink" href="https://www.weather.gov/">
+        <span class="quick-icon">☀</span>Weather
+      </a>
+      <a class="quicklink" href="https://www.reddit.com/">
+        <span class="quick-icon">◉</span>Reddit
+      </a>
+      <a class="quicklink" href="https://www.google.com/maps/">
+        <span class="quick-icon">⌖</span>Maps
+      </a>
+    </nav>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <h2>Web search</h2>
+        <p>Search results appear below when embedding is supported.</p>
+      </div>
+      <div class="section-actions">
+        <button class="back-btn" id="searchBack" type="button">← Back</button>
+        <button class="open-btn" id="searchOpen" type="button">Open ↗</button>
+      </div>
+    </div>
+    <div class="frame-status">
+      <span id="searchStatus">Ready to search with Bing</span>
+      <span>Search provider: <strong id="searchProvider">Bing</strong></span>
+    </div>
+    <iframe id="searchFrame" title="Web search results"
+      referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="frame-message" id="searchMessage">
+      <h3>Open search results</h3>
+      <p>This provider may prevent its results from appearing inside another website.</p>
+      <button class="primary-btn" id="searchFallback" type="button">
+        Open results
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <h2>News desk</h2>
+        <p>Your daily headlines, all in one place.</p>
+      </div>
+      <div class="section-actions">
+        <select class="select" id="newsSource" aria-label="News source">
+          <option value="bing">Bing News</option>
+          <option value="npr">NPR</option>
+          <option value="google">Google News</option>
+          <option value="yahoo">Yahoo News</option>
+          <option value="bbc">BBC News</option>
+          <option value="ap">Associated Press</option>
+        </select>
+        <button class="back-btn" id="newsBack" type="button">← Back</button>
+        <button class="open-btn" id="newsOpen" type="button">Open ↗</button>
+      </div>
+    </div>
+    <div class="frame-status">
+      <span id="newsStatus">Showing Bing News</span>
+      <span id="newsMode">Embedded view</span>
+    </div>
+    <iframe id="newsFrame" title="News feed"
+      referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="frame-message" id="newsMessage">
+      <h3 id="newsMessageTitle">Open news website</h3>
+      <p>This news provider opens directly on its own website.</p>
+      <button class="primary-btn" id="newsFallback" type="button">
+        Visit news site ↗
+      </button>
+    </div>
+  </section>
+
+  <footer>BlueDesk · A simple home for search and news</footer>
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  let searchUrl = "";
+  let newsUrl = "";
+  let searchHistory = [];
+  let newsHistory = [];
+
+  const searchFrame = $("searchFrame");
+  const newsFrame = $("newsFrame");
+
+  function showFrame(frame, message, visible) {
+    frame.style.display = visible ? "block" : "none";
+    message.style.display = visible ? "none" : "block";
+  }
+
+  function remember(history, url) {
+    if (history.length === 0 || history[history.length - 1] !== url) {
+      history.push(url);
+    }
+  }
+
+  function openSearch(url, provider, embed) {
+    searchUrl = url;
+    $("searchProvider").textContent = provider;
+    $("searchStatus").textContent = embed
+      ? "Loading " + provider + " results…"
+      : "Opening " + provider + " directly";
+
+    if (!embed) {
+      window.location.assign(url);
+      return;
+    }
+
+    remember(searchHistory, url);
+    showFrame(searchFrame, $("searchMessage"), true);
+    searchFrame.src = url;
+  }
+
+  $("searchForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const query = $("searchInput").value.trim();
+    if (!query) {
+      $("searchInput").focus();
+      return;
+    }
+
+    const encoded = encodeURIComponent(query);
+    const engine = $("searchEngine").value;
+
+    if (engine === "yahoo") {
+      openSearch("https://search.yahoo.com/search?p=" + encoded, "Yahoo", false);
+    } else {
+      openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
+    }
+  });
+
+  $("searchBack").addEventListener("click", () => {
+    if (searchHistory.length > 1) {
+      searchHistory.pop();
+      const previous = searchHistory[searchHistory.length - 1];
+      searchUrl = previous;
+      searchFrame.src = previous;
+      $("searchStatus").textContent = "Returned to previous search";
+    } else {
+      $("searchInput").focus();
+      $("searchStatus").textContent = "Enter a search to get started";
+    }
+  });
+
+  $("searchOpen").addEventListener("click", () => {
+    if (searchUrl) window.open(searchUrl, "_blank", "noopener");
+  });
+
+  $("searchFallback").addEventListener("click", () => {
+    if (searchUrl) window.open(searchUrl, "_blank", "noopener");
+  });
+
+  // Bing News and NPR use the embedded view.
+  // Google News, Yahoo News, BBC and AP redirect directly.
+  const newsSources = {
+    bing: {
+      name: "Bing News",
+      url: "https://www.bing.com/news",
+      embed: true
+    },
+    npr: {
+      name: "NPR",
+      url: "https://www.npr.org/",
+      embed: true
+    },
+    google: {
+      name: "Google News",
+      url: "https://news.google.com/",
+      embed: false
+    },
+    yahoo: {
+      name: "Yahoo News",
+      url: "https://news.yahoo.com/",
+      embed: false
+    },
+    bbc: {
+      name: "BBC News",
+      url: "https://www.bbc.com/news",
+      embed: false
+    },
+    ap: {
+      name: "Associated Press",
+      url: "https://apnews.com/",
+      embed: false
+    }
+  };
+
+  function selectNews(key, initial = false) {
+    const source = newsSources[key];
+    if (!source) return;
+
+    newsUrl = source.url;
+    $("newsStatus").textContent = source.name;
+    $("newsMessageTitle").textContent = "Visit " + source.name;
+
+    if (source.embed) {
+      $("newsMode").textContent = "Embedded view";
+      remember(newsHistory, source.url);
+      showFrame(newsFrame, $("newsMessage"), true);
+      newsFrame.src = source.url;
+    } else {
+      $("newsMode").textContent = "Direct website";
+      if (!initial) window.location.assign(source.url);
+      else {
+        showFrame(newsFrame, $("newsMessage"), false);
+      }
+    }
+  }
+
+  $("newsSource").addEventListener("change", event => {
+    selectNews(event.target.value);
+  });
+
+  $("newsBack").addEventListener("click", () => {
+    if (newsHistory.length > 1) {
+      newsHistory.pop();
+      newsUrl = newsHistory[newsHistory.length - 1];
+      newsFrame.src = newsUrl;
+      $("newsStatus").textContent = "Previous news page";
+    } else {
+      $("newsStatus").textContent = "No previous embedded page";
+    }
+  });
+
+  $("newsOpen").addEventListener("click", () => {
+    if (newsUrl) window.open(newsUrl, "_blank", "noopener");
+  });
+
+  $("newsFallback").addEventListener("click", () => {
+    if (newsUrl) window.open(newsUrl, "_blank", "noopener");
+  });
+
+  // A load event cannot confirm whether a remote page rendered successfully:
+  // providers may block framing while the iframe itself still fires "load".
+  searchFrame.addEventListener("load", () => {
+    $("searchStatus").textContent = "Search page loaded or attempted";
+  });
+
+  newsFrame.addEventListener("load", () => {
+    $("newsStatus").textContent = "News page loaded or attempted";
+  });
+
+  selectNews("bing", true);
+</script>
+</body>
+</html>
