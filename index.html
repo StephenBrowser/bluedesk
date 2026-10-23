@@ -463,14 +463,12 @@
     const engine = $("searchEngine").value;
 
     if (engine === "yahoo") {
-      openSearch("https://search.yahoo.com/search?p=" + encoded, "Yahoo", false);
-    } else {
-      if (engine === "bing") {
-        openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
-    } else {
-      if (engine === "wikipedia") {
-        openSearch("https://www.en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
-  });
+  openSearch("https://search.yahoo.com/search?p=" + encoded, "Yahoo", false);
+    } else if (engine === "bing") {
+  openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
+    } else if (engine === "wikipedia") {
+  openSearch("https://www.en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
+    }
 
   $("searchBack").addEventListener("click", () => {
     if (searchHistory.length > 1) {
