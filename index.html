@@ -467,9 +467,9 @@
     } else if (engine === "bing") {
       openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
     } else {
-      openSearch("https://www.en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
+      openSearch("https://en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
     }
-  }); // <-- Added missing closing brace here
+  });
 
   $("searchBack").addEventListener("click", () => {
     if (searchHistory.length > 1) {
