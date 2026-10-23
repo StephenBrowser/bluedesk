@@ -321,6 +321,7 @@
         <select id="searchEngine" aria-label="Search engine">
           <option value="bing">Bing</option>
           <option value="yahoo">Yahoo</option>
+          <option value="wikipedia">Wikipedia</option>
         </select>
         <button class="primary-btn" type="submit">Search</button>
       </form>
@@ -464,8 +465,11 @@
     if (engine === "yahoo") {
       openSearch("https://search.yahoo.com/search?p=" + encoded, "Yahoo", false);
     } else {
-      openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
-    }
+      if (engine === "bing") {
+        openSearch("https://www.bing.com/search?q=" + encoded, "Bing", true);
+    } else {
+      if (engine === "wikipedia") {
+        openSearch("https://www.en.wikipedia.org/w/index.php?search=" + encoded, "Wikipedia", true);
   });
 
   $("searchBack").addEventListener("click", () => {
