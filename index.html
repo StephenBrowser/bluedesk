@@ -183,6 +183,7 @@ footer{padding:0 0 25px;text-align:center;color:var(--muted);font-size:12px}
         </select>
 
         <select id="aiProvider" class="select provider-select" aria-label="AI provider" hidden>
+          <option value="look">BlueDesk Look</option>
           <option value="britannica">Britannica AI</option>
           <option value="perplexity">Perplexity</option>
           <option value="chatgpt">ChatGPT</option>
@@ -545,6 +546,10 @@ const webSources = {
 };
 
 const aiSources = {
+  look: {
+    name: "BlueDesk Look",
+    url: "https://pickaxe.co/user/deployment-preview/embed-script?bundleUrl=https%3A%2F%2Fstudio.pickaxe.co%2Fapi%2Fembed%2Fbundle.js%3Fpx-preview-revision%3D1&deploymentId=deployment-922e1878-6dd2-44fb-bd9d-26b644569851&px-preview-revision=1&pxtoken=None"
+  },
   britannica: {
     name: "Britannica AI",
     url: "https://www.britannica.com/chatbot"
