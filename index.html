@@ -1,839 +1,1158 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BlueDesk — Search, News & Games</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlueDesk — Search, News &amp; Games</title>
 
-  <style>
-    :root {
-      --blue: #1769d2;
-      --deep-blue: #104a9b;
-      --pale-blue: #eaf3ff;
-      --page: #f4f7fc;
-      --white: #fff;
-      --text: #1b2b42;
-      --muted: #718096;
-      --border: #dce5f0;
-    }
+<style>
+:root {
+  --blue:#1769d2;
+  --deep-blue:#104a9b;
+  --pale-blue:#eaf3ff;
+  --page:#f4f7fc;
+  --white:#fff;
+  --text:#1b2b42;
+  --muted:#718096;
+  --border:#dce5f0;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Helvetica,Arial,sans-serif;background:var(--page);color:var(--text)}
+header{min-height:66px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 42px}
+.brand{font-size:20px;font-weight:700;color:var(--deep-blue);letter-spacing:-.5px}
+.brand span{color:var(--blue)}
+.header-note{font-size:12px;color:var(--muted)}
+main{width:min(1080px,calc(100% - 80px));margin:auto}
+.hero{text-align:center;padding:30px 0 24px}
+.logo-space{height:105px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.logo-placeholder{width:120px;height:84px;border-radius:23px;background:linear-gradient(145deg,#2c8aff,#1051ae);display:grid;place-items:center;color:white;font-size:19px;font-weight:bold;box-shadow:0 8px 22px #1769d233}
+h1{margin:0 0 8px;font-size:30px;letter-spacing:-1px}
+.subtitle{margin:0 0 23px;color:var(--muted);font-size:14px}
+.search-wrap{max-width:760px;margin:auto}
+.searchbar{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 18px;background:white;border:1px solid var(--border);border-radius:14px;box-shadow:0 5px 22px #1b47740b}
+.search-icon{color:var(--muted);font-size:21px}
+input,select,button{font:inherit}
+#searchInput,#searchInputWeb{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:11px 2px;color:var(--text);font-size:15px}
+.select{border:1px solid var(--border);background:#f8faff;padding:10px;border-radius:8px;color:var(--text);cursor:pointer;max-width:200px}
+.primary-btn{border:0;background:var(--blue);color:white;padding:12px 20px;border-radius:9px;font-weight:600;cursor:pointer}
+.primary-btn:hover{background:var(--deep-blue)}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.quicklinks{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:23px}
+.quicklink{background:white;border:1px solid var(--border);border-radius:12px;padding:15px 8px;color:var(--text);text-decoration:none;font-size:13px;transition:.15s}
+.quicklink:hover{border-color:#9bc4ff;transform:translateY(-2px);box-shadow:0 5px 14px #1769d212}
+.quick-icon{display:block;font-size:23px;margin-bottom:8px}
+.section{margin:10px 0 35px;background:white;border:1px solid var(--border);border-radius:15px;overflow:hidden}
+[hidden]{display:none!important}
+.section-heading{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 20px;border-bottom:1px solid var(--border)}
+.section-heading h2{margin:0;font-size:17px}
+.section-heading p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.section-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.back-btn,.open-btn,.mode-btn{border:1px solid var(--border);background:white;color:var(--text);padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.back-btn:hover,.open-btn:hover,.mode-btn:hover{background:var(--pale-blue)}
+.mode-btn.active{color:white;background:var(--blue);border-color:var(--blue)}
+.frame-status{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 18px;background:#f9fbff;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px}
+iframe{display:block;width:100%;height:490px;border:0;background:white}
+#newsFrame{height:430px}
+.frame-message{display:none;padding:40px 25px;text-align:center;background:#f9fbff}
+.frame-message h3{margin-top:0}
+.frame-message p{color:var(--muted);font-size:14px;line-height:1.6}
+.frame-message button{margin-top:8px}
+.web-heading{align-items:center}
+.web-heading-left{display:flex;flex-direction:column;gap:9px;min-width:0}
+.web-modes{display:flex;flex-wrap:wrap;gap:6px}
+.web-heading-right{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.provider-select{max-width:190px}
+.media-results{padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.media-card{border:1px solid var(--border);border-radius:11px;overflow:hidden;background:white;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:left;color:var(--text);padding:0}
+.media-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px #1769d218}
+.media-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#edf2f8}
+.media-card h3{font-size:14px;line-height:1.4;margin:10px 11px 5px}
+.media-card p{font-size:12px;color:var(--muted);line-height:1.4;margin:0 11px 12px}
+.video-config{display:flex;gap:8px;align-items:center;padding:14px 16px;flex-wrap:wrap}
+.video-config input{flex:1;min-width:180px;border:1px solid var(--border);border-radius:8px;padding:10px}
+.video-overlay{position:fixed;inset:0;z-index:1000;background:#07101eef;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px}
+.video-dialog{width:min(1000px,100%);background:white;border-radius:14px;overflow:hidden;margin:auto}
+.video-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.video-dialog-head h2{font-size:16px;margin:0}
+.video-player{background:#080b10;width:100%;aspect-ratio:16/9}
+.video-player iframe{width:100%;height:100%;border:0}
+.video-details{padding:18px;line-height:1.55}
+.video-details h3{margin:0 0 8px;font-size:18px}
+.video-details p{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.media-empty{padding:35px 20px;text-align:center;color:var(--muted);grid-column:1/-1}
+footer{padding:0 0 25px;text-align:center;color:var(--muted);font-size:12px}
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Helvetica, Arial, sans-serif;
-      background: var(--page);
-      color: var(--text);
-    }
-
-    header {
-      min-height: 66px;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 42px;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--deep-blue);
-      letter-spacing: -.5px;
-    }
-
-    .brand span { color: var(--blue); }
-
-    .header-note {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    main {
-      width: min(1080px, calc(100% - 80px));
-      margin: 0 auto;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 30px 0 24px;
-    }
-
-    .logo-space {
-      width: 100%;
-      height: 105px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-
-    .logo-placeholder {
-      width: 120px;
-      height: 84px;
-      border-radius: 23px;
-      background: linear-gradient(145deg, #2c8aff, #1051ae);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-size: 19px;
-      font-weight: bold;
-      box-shadow: 0 8px 22px #1769d233;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 30px;
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      margin: 0 0 23px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .search-wrap {
-      max-width: 760px;
-      margin: auto;
-    }
-
-    .searchbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 8px 7px 18px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: 0 5px 22px #1b47740b;
-    }
-
-    .search-icon {
-      color: var(--muted);
-      font-size: 21px;
-    }
-
-    input, select, button { font: inherit; }
-
-    #searchInput {
-      flex: 1;
-      min-width: 0;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      padding: 11px 2px;
-      color: var(--text);
-      font-size: 15px;
-    }
-
-    #searchEngine, .select {
-      border: 1px solid var(--border);
-      background: #f8faff;
-      padding: 10px;
-      border-radius: 8px;
-      color: var(--text);
-      cursor: pointer;
-      max-width: 175px;
-    }
-
-    .primary-btn {
-      border: 0;
-      background: var(--blue);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 9px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .primary-btn:hover { background: var(--deep-blue); }
-
-    button:focus-visible, a:focus-visible, select:focus-visible,
-    input:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 3px;
-    }
-
-    .quicklinks {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-      margin-top: 23px;
-    }
-
-    .quicklink {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 13px;
-      transition: .15s ease;
-    }
-
-    .quicklink:hover {
-      border-color: #9bc4ff;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 14px #1769d212;
-    }
-
-    .quick-icon {
-      display: block;
-      font-size: 23px;
-      margin-bottom: 8px;
-    }
-
-    .section {
-      margin: 10px 0 35px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      overflow: hidden;
-    }
-
-    .section-heading {
-      min-height: 66px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 13px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .section-heading p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .section-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 9px;
-    }
-
-    .back-btn, .open-btn {
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--text);
-      padding: 9px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .back-btn:hover, .open-btn:hover {
-      background: var(--pale-blue);
-    }
-
-    .frame-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px 18px;
-      background: #f9fbff;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .frame-status a { color: var(--blue); }
-
-    iframe {
-      display: block;
-      width: 100%;
-      height: 490px;
-      border: 0;
-      background: white;
-    }
-
-    #newsFrame { height: 430px; }
-    #gamesFrame { height: 490px; }
-
-    .frame-message {
-      display: none;
-      padding: 45px 25px;
-      text-align: center;
-      background: #f9fbff;
-    }
-
-    .frame-message h3 { margin-top: 0; }
-
-    .frame-message p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .frame-message button { margin-top: 8px; }
-
-    footer {
-      padding: 0 0 25px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    @media (max-width: 950px) {
-      main { width: calc(100% - 40px); }
-      header { padding: 12px 20px; }
-      .quicklinks { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (max-width: 600px) {
-      main { width: calc(100% - 24px); }
-
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .hero { padding-top: 22px; }
-      h1 { font-size: 25px; }
-
-      .searchbar {
-        flex-wrap: wrap;
-        padding: 10px;
-      }
-
-      .search-icon { display: none; }
-
-      #searchInput {
-        flex-basis: 100%;
-        width: 100%;
-      }
-
-      #searchEngine { flex: 1; }
-
-      .primary-btn { padding: 11px 14px; }
-
-      .quicklinks {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 9px;
-      }
-
-      .section-heading {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 15px;
-      }
-
-      .section-actions { width: 100%; }
-
-      .section-actions .select {
-        flex: 1 1 100%;
-        max-width: 100%;
-      }
-
-      iframe, #newsFrame, #gamesFrame {
-        height: 400px;
-      }
-
-      .frame-status { padding: 10px 12px; }
-    }
-  </style>
+@media(max-width:950px){
+  main{width:calc(100% - 40px)}
+  header{padding:12px 20px}
+  .quicklinks{grid-template-columns:repeat(3,1fr)}
+  .web-heading{align-items:flex-start}
+}
+@media(max-width:600px){
+  main{width:calc(100% - 24px)}
+  header{align-items:flex-start;flex-direction:column;gap:5px}
+  .hero{padding-top:22px}
+  h1{font-size:25px}
+  .searchbar{flex-wrap:wrap;padding:10px}
+  .search-icon{display:none}
+  #searchInput,#searchInputWeb{flex-basis:100%;width:100%}
+  .primary-btn{padding:11px 14px}
+  .quicklinks{grid-template-columns:repeat(2,1fr);gap:9px}
+  .section-heading{align-items:flex-start;flex-direction:column;padding:15px}
+  .web-heading-left,.web-heading-right{width:100%}
+  .web-heading-right{justify-content:flex-start}
+  .web-modes{width:100%;gap:5px}
+  .mode-btn{flex:1 1 auto;padding:9px 8px}
+  .provider-select{flex:1;max-width:none}
+  .section-actions{width:100%}
+  .section-actions .select{flex:1 1 100%;max-width:100%}
+  iframe,#newsFrame{height:400px}
+  .frame-status{padding:10px 12px}
+  .media-results{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px;gap:9px}
+  .video-overlay{padding:8px}
+  .video-config input{flex-basis:100%}
+  .video-dialog-head{align-items:flex-start;flex-direction:column}
+}
+</style>
 </head>
 
 <body>
-  <header>
-    <div class="brand">Blue<span>Desk</span></div>
-    <div class="header-note">Your search. Your news. One place.</div>
-  </header>
+<header>
+  <div class="brand">Blue<span>Desk</span></div>
+  <div class="header-note">Your search. Your news. One place.</div>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="logo-space" id="logoSpace">
-        <div class="logo-placeholder">BlueDesk</div>
-      </div>
+<main>
+  <section class="hero" id="homeView">
+    <div class="logo-space"><div class="logo-placeholder">BlueDesk</div></div>
+    <h1>A better place to start.</h1>
+    <p class="subtitle">Search the web and catch up on the news.</p>
 
-      <h1>A better place to start.</h1>
-      <p class="subtitle">Search the web and catch up on the news.</p>
+    <div class="search-wrap">
+      <form class="searchbar" id="searchForm">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Search the web..."
+               autocomplete="off" aria-label="Search the web" required>
+        <button class="primary-btn" type="submit">Search</button>
+      </form>
+    </div>
 
-      <div class="search-wrap">
-        <form class="searchbar" id="searchForm">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input id="searchInput" type="search"
-            placeholder="Search the web..."
-            autocomplete="off"
-            aria-label="Search the web"
-            required>
+    <nav class="quicklinks" id="quicklinks" aria-label="Quick links">
+      <a class="quicklink" href="https://mail.google.com/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">✉</span>Email</a>
+      <a class="quicklink" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">▶</span>YouTube</a>
+      <a class="quicklink" href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">◉</span>Wikipedia</a>
+      <a class="quicklink" href="https://www.weather.gov/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">☀</span>Weather</a>
+      <a class="quicklink" href="https://www.reddit.com/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">◉</span>Reddit</a>
+      <a class="quicklink" href="https://www.google.com/maps/" target="_blank" rel="noopener noreferrer"><span class="quick-icon">⌖</span>Maps</a>
+    </nav>
+  </section>
 
-          <select id="searchEngine" aria-label="Search engine">
-            <option value="bing">Bing</option>
-            <option value="yahoo">Yahoo</option>
-            <option value="wikipedia">Wikipedia</option>
-            <option value="dogpile">Dogpile</option>
-            <option value="ecosia">Ecosia</option>
-          </select>
-
-          <button class="primary-btn" type="submit">Search</button>
-        </form>
-      </div>
-
-      <nav class="quicklinks" aria-label="Quick links">
-        <a class="quicklink" href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">✉</span>Email
-        </a>
-        <a class="quicklink" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">▶</span>YouTube
-        </a>
-        <a class="quicklink" href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">◉</span>Wikipedia
-        </a>
-        <a class="quicklink" href="https://www.weather.gov/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">☀</span>Weather
-        </a>
-        <a class="quicklink" href="https://www.reddit.com/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">◉</span>Reddit
-        </a>
-        <a class="quicklink" href="https://www.google.com/maps/" target="_blank" rel="noopener noreferrer">
-          <span class="quick-icon" aria-hidden="true">⌖</span>Maps
-        </a>
-      </nav>
-    </section>
-
-    <!-- Web search -->
-    <section class="section">
-      <div class="section-heading">
-        <div>
-          <h2>Web search</h2>
-          <p>Search results appear below when embedding is supported.</p>
+  <!-- Web search -->
+  <section class="section" id="webSearchSection" hidden>
+    <div class="section-heading web-heading">
+      <div class="web-heading-left">
+        <h2 id="webHeadingTitle">Web Search</h2>
+        <div class="web-modes" aria-label="Search categories">
+          <button class="mode-btn active" type="button" data-mode="web">Web</button>
+          <button class="mode-btn" type="button" data-mode="news">News</button>
+          <button class="mode-btn" type="button" data-mode="ai">AI Mode</button>
+          <button class="mode-btn" type="button" data-mode="maps">Maps</button>
+          <button class="mode-btn" type="button" data-mode="images">Images</button>
+          <button class="mode-btn" type="button" data-mode="videos">Videos</button>
         </div>
+      </div>
+
+      <div class="web-heading-right">
+        <select id="searchEngine" class="select provider-select" aria-label="Web search provider">
+          <option value="bing">Bing</option>
+          <option value="yahoo">Yahoo</option>
+          <option value="wikipedia">Wikipedia</option>
+          <option value="dogpile">Dogpile</option>
+          <option value="ecosia">Ecosia</option>
+        </select>
+
+        <select id="webNewsSource" class="select provider-select" aria-label="News search provider" hidden>
+          <option value="bing">Bing News</option>
+          <option value="npr">NPR</option>
+          <option value="google">Google News</option>
+          <option value="yahoo">Yahoo News</option>
+          <option value="bbc">BBC News</option>
+          <option value="ap">Associated Press</option>
+        </select>
+
+        <select id="aiProvider" class="select provider-select" aria-label="AI provider" hidden>
+          <option value="britannica">Britannica AI</option>
+          <option value="perplexity">Perplexity</option>
+          <option value="chatgpt">ChatGPT</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="claude">Claude</option>
+          <option value="copilot">Microsoft Copilot</option>
+          <option value="you">You.com</option>
+        </select>
+
+        <select id="mapsProvider" class="select provider-select" aria-label="Maps provider" hidden>
+          <option value="google">Google Maps</option>
+          <option value="mapquest">MapQuest</option>
+          <option value="openstreetmap">OpenStreetMap</option>
+        </select>
+
+        <select id="imagesProvider" class="select provider-select" aria-label="Image search provider" hidden>
+          <option value="bing">Bing Images</option>
+          <option value="tineye">TinEye</option>
+          <option value="britannica">Britannica ImageQuest</option>
+          <option value="google">Google Images</option>
+          <option value="duckduckgo">DuckDuckGo Images</option>
+          <option value="wikimedia">Wikimedia Commons</option>
+        </select>
+
+        <select id="videosProvider" class="select provider-select" aria-label="Video search provider" hidden>
+          <option value="youtube">YouTube</option>
+        </select>
+
+        <button class="back-btn" id="searchBack" type="button">← Back</button>
+        <button class="open-btn" id="searchOpen" type="button">Open ↗</button>
+      </div>
+    </div>
+
+    <form class="searchbar" id="searchFormWeb" style="margin:16px">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input id="searchInputWeb" type="search" placeholder="Search the web..."
+             autocomplete="off" aria-label="Search query" required>
+      <button class="primary-btn" type="submit">Search</button>
+    </form>
+
+    <div class="frame-status">
+      <span id="searchStatus" aria-live="polite">Enter a search to get started.</span>
+      <span>Provider: <strong id="searchProvider">Bing</strong></span>
+    </div>
+
+    <iframe id="searchFrame" title="Search results"
+            referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+
+    <div id="videoConfig" class="video-config" hidden>
+      <label for="youtubeApiKey">YouTube API key</label>
+      <input id="youtubeApiKey" type="password" autocomplete="off"
+             placeholder="Paste your YouTube Data API v3 key">
+      <button class="back-btn" id="saveYoutubeKey" type="button">Save key</button>
+      <button class="open-btn" id="clearYoutubeKey" type="button">Clear</button>
+    </div>
+
+    <div id="mediaResults" class="media-results" hidden></div>
+
+    <div class="frame-message" id="searchMessage">
+      <h3 id="searchMessageTitle">Search the web</h3>
+      <p id="searchMessageText">Enter a query to get started.</p>
+      <button class="primary-btn" id="searchFallback" type="button">Open results ↗</button>
+    </div>
+  </section>
+
+  <!-- Video player -->
+  <div class="video-overlay" id="videoOverlay" role="dialog" aria-modal="true" aria-labelledby="videoOverlayTitle">
+    <div class="video-dialog">
+      <div class="video-dialog-head">
+        <h2 id="videoOverlayTitle">Video</h2>
         <div class="section-actions">
-          <button class="back-btn" id="searchBack" type="button">← Back</button>
-          <button class="open-btn" id="searchOpen" type="button">Open ↗</button>
-        </div>
-      </div>
-
-      <div class="frame-status">
-        <span id="searchStatus" aria-live="polite">Ready to search with Bing</span>
-        <span>Search provider: <strong id="searchProvider">Bing</strong></span>
-      </div>
-
-      <iframe id="searchFrame" title="Web search results"
-        referrerpolicy="strict-origin-when-cross-origin"
-        loading="lazy"></iframe>
-
-      <div class="frame-message" id="searchMessage">
-        <h3>Open search results</h3>
-        <p>This provider may prevent its results from appearing inside another website.</p>
-        <button class="primary-btn" id="searchFallback" type="button">
-          Open results ↗
-        </button>
-      </div>
-    </section>
-
-    <!-- News -->
-    <section class="section">
-      <div class="section-heading">
-        <div>
-          <h2>News desk</h2>
-          <p>Your daily headlines, all in one place.</p>
-        </div>
-
-        <div class="section-actions">
-          <select class="select" id="newsSource" aria-label="News source">
-            <option value="bing">Bing News</option>
-            <option value="npr">NPR</option>
-            <option value="google">Google News</option>
-            <option value="yahoo">Yahoo News</option>
-            <option value="bbc">BBC News</option>
-            <option value="ap">Associated Press</option>
+          <select id="videoPlayerSource" class="select" aria-label="Video player source">
+            <option value="youtube">YouTube</option>
+            <option value="youtube-nocookie">YouTube No Cookie</option>
+            <option value="invidious">Invidious</option>
+            <option value="piped">Piped</option>
+            <option value="youtubeapi">Google APIs</option>
           </select>
-          <button class="back-btn" id="newsBack" type="button">← Back</button>
-          <button class="open-btn" id="newsOpen" type="button">Open ↗</button>
+          <button class="back-btn" id="closeVideoOverlay" type="button">Close ✕</button>
         </div>
       </div>
+      <div class="video-player" id="videoPlayer"></div>
+      <div class="video-details" id="videoDetails"><p>Loading video details…</p></div>
+    </div>
+  </div>
 
-      <div class="frame-status">
-        <span id="newsStatus" aria-live="polite">Choose a news source</span>
-        <span id="newsMode">Ready</span>
+  <!-- News Desk -->
+  <section class="section" id="newsSection">
+    <div class="section-heading">
+      <div><h2>News Desk</h2><p>Your daily headlines, all in one place.</p></div>
+      <div class="section-actions">
+        <select class="select" id="newsSource" aria-label="News Desk source">
+          <option value="bing">Bing News</option>
+          <option value="npr">NPR</option>
+          <option value="google">Google News</option>
+          <option value="yahoo">Yahoo News</option>
+          <option value="bbc">BBC News</option>
+          <option value="ap">Associated Press</option>
+        </select>
+        <button class="back-btn" id="newsBack" type="button">← Back</button>
+        <button class="open-btn" id="newsOpen" type="button">Open ↗</button>
       </div>
+    </div>
+    <div class="frame-status">
+      <span id="newsStatus" aria-live="polite">Choose a news source</span>
+      <span id="newsMode">Ready</span>
+    </div>
+    <iframe id="newsFrame" title="News feed" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+    <div class="frame-message" id="newsMessage">
+      <h3 id="newsMessageTitle">Open news website</h3>
+      <p id="newsMessageText">This news provider may require its own website.</p>
+      <button class="primary-btn" id="newsFallback" type="button">Visit news site ↗</button>
+    </div>
+  </section>
 
-      <iframe id="newsFrame" title="News feed"
-        referrerpolicy="strict-origin-when-cross-origin"
-        loading="lazy"></iframe>
-
-      <div class="frame-message" id="newsMessage">
-        <h3 id="newsMessageTitle">Open news website</h3>
-        <p id="newsMessageText">This news provider may require its own website.</p>
-        <button class="primary-btn" id="newsFallback" type="button">
-          Visit news site ↗
-        </button>
+  <!-- Educational games -->
+  <section class="section" id="gamesSection">
+    <div class="section-heading">
+      <div><h2>Edu Games</h2><p>Choose a game to play. Play with teacher permission.</p></div>
+      <div class="section-actions">
+        <select class="select" id="gameSource" aria-label="Choose a game">
+          <option value="globle">Globle</option>
+          <option value="quordle">Quordle</option>
+          <option value="wordle">Wordle</option>
+          <option value="bee">Spelling Bee</option>
+          <option value="connections">Connections</option>
+          <option value="seterra">Seterra</option>
+        </select>
+        <button class="back-btn" id="gamesBack" type="button">← Back</button>
+        <button class="open-btn" id="gamesOpen" type="button">Open ↗</button>
       </div>
-    </section>
+    </div>
+    <div class="frame-status">
+      <span id="gamesStatus" aria-live="polite">Choose a game</span>
+      <span id="gamesMode">Ready</span>
+    </div>
+    <iframe id="gamesFrame" title="Educational games" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+    <div class="frame-message" id="gamesMessage">
+      <h3 id="gamesMessageTitle">Open game website</h3>
+      <p id="gamesMessageText">This game may need to be opened on its own website.</p>
+      <button class="primary-btn" id="gamesFallback" type="button">Visit game site ↗</button>
+    </div>
+  </section>
 
-    <!-- Educational games -->
-    <section class="section">
-      <div class="section-heading">
-        <div>
-          <h2>Edu Games</h2>
-          <p>Choose a game to play. Play with teacher permission.</p>
-        </div>
+  <footer id="pageFooter">BlueDesk · Search, news, images, videos and games</footer>
+</main>
 
-        <div class="section-actions">
-          <select class="select" id="gameSource" aria-label="Choose a game">
-            <option value="globle">Globle</option>
-            <option value="quordle">Quordle</option>
-            <option value="wordle">Wordle</option>
-            <option value="bee">Spelling Bee</option>
-            <option value="connections">Connections</option>
-            <option value="seterra">Seterra</option>
-          </select>
-          <button class="back-btn" id="gamesBack" type="button">← Back</button>
-          <button class="open-btn" id="gamesOpen" type="button">Open ↗</button>
-        </div>
-      </div>
+<script>
+"use strict";
 
-      <div class="frame-status">
-        <span id="gamesStatus" aria-live="polite">Choose a game</span>
-        <span id="gamesMode">Ready</span>
-      </div>
+const $ = id => document.getElementById(id);
 
-      <iframe id="gamesFrame" title="Educational games"
-        referrerpolicy="strict-origin-when-cross-origin"
-        loading="lazy"></iframe>
+const homeView = $("homeView");
+const quicklinks = $("quicklinks");
+const webSection = $("webSearchSection");
+const newsSection = $("newsSection");
+const gamesSection = $("gamesSection");
+const pageFooter = $("pageFooter");
+const mediaResults = $("mediaResults");
+const videoConfig = $("videoConfig");
 
-      <div class="frame-message" id="gamesMessage">
-        <h3 id="gamesMessageTitle">Open game website</h3>
-        <p id="gamesMessageText">This game may need to be opened on its own website.</p>
-        <button class="primary-btn" id="gamesFallback" type="button">
-          Visit game site ↗
-        </button>
-      </div>
-    </section>
+const searchFrame = $("searchFrame");
+const newsFrame = $("newsFrame");
+const gamesFrame = $("gamesFrame");
 
-    <footer>BlueDesk · A simple home for search, news and games</footer>
-  </main>
+let searchUrl = "";
+let newsUrl = "";
+let gamesUrl = "";
+let currentMode = "web";
+let currentView = "home";
+let lastQuery = "";
+let currentVideoId = "";
+let currentVideoTitle = "";
 
-  <script>
-    "use strict";
+const searchHistory = [];
+const newsHistory = [];
+const gamesHistory = [];
 
-    const $ = id => document.getElementById(id);
+function openExternal(url) {
+  if (url) window.open(url, "_blank", "noopener,noreferrer");
+}
 
-    const searchFrame = $("searchFrame");
-    const newsFrame = $("newsFrame");
-    const gamesFrame = $("gamesFrame");
+function remember(history, url) {
+  if (url && history[history.length - 1] !== url) history.push(url);
+}
 
-    let searchUrl = "";
-    let newsUrl = "";
-    let gamesUrl = "";
+function showFrame(frame, message, visible) {
+  frame.hidden = !visible;
+  message.style.display = visible ? "none" : "block";
+}
 
-    const searchHistory = [];
-    const newsHistory = [];
-    const gamesHistory = [];
+function navigateBack(history, frame, status, fallback) {
+  if (history.length > 1) {
+    history.pop();
+    const previous = history[history.length - 1];
+    frame.src = previous;
+    status.textContent = "Returned to previous page.";
+    return previous;
+  }
+  status.textContent = fallback;
+  return "";
+}
 
-    // Open external websites in a new tab without leaving BlueDesk.
-    function openExternal(url) {
-      if (!url) return;
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
+function showHome() {
+  currentView = "home";
+  homeView.hidden = false;
+  quicklinks.hidden = false;
+  webSection.hidden = true;
+  newsSection.hidden = false;
+  gamesSection.hidden = false;
+  pageFooter.hidden = false;
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
 
-    function remember(history, url) {
-      if (!url) return;
+function showSearchView() {
+  currentView = "search";
+  homeView.hidden = true;
+  quicklinks.hidden = true;
+  newsSection.hidden = true;
+  gamesSection.hidden = true;
+  pageFooter.hidden = true;
+  webSection.hidden = false;
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
 
-      if (history[history.length - 1] !== url) {
-        history.push(url);
-      }
-    }
+const modeTitles = {
+  web: "Web Search",
+  news: "News Search",
+  ai: "AI Search",
+  maps: "Maps",
+  images: "Image Search",
+  videos: "Video Search"
+};
 
-    function showFrame(frame, message, visible) {
-      frame.style.display = visible ? "block" : "none";
-      message.style.display = visible ? "none" : "block";
-    }
+function syncNewsDropdowns(value) {
+  $("newsSource").value = value;
+  $("webNewsSource").value = value;
+}
 
-    function navigateBack(history, frame, statusElement, fallbackText) {
-      // The current URL is the last history entry.
-      if (history.length > 1) {
-        history.pop();
-        const previous = history[history.length - 1];
+function setMode(mode) {
+  currentMode = mode;
+  $("webHeadingTitle").textContent = modeTitles[mode];
 
-        frame.src = previous;
-        statusElement.textContent = "Returned to previous page";
-        return previous;
-      }
+  document.querySelectorAll(".mode-btn").forEach(button => {
+    const active = button.dataset.mode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
 
-      statusElement.textContent = fallbackText;
-      return "";
-    }
+  $("searchEngine").hidden = mode !== "web";
+  $("webNewsSource").hidden = mode !== "news";
+  $("aiProvider").hidden = mode !== "ai";
+  $("mapsProvider").hidden = mode !== "maps";
+  $("imagesProvider").hidden = mode !== "images";
+  $("videosProvider").hidden = mode !== "videos";
+  videoConfig.hidden = mode !== "videos";
+  mediaResults.hidden = true;
 
-    // -------------------------
-    // Web search
-    // -------------------------
+  const placeholders = {
+    web: "Search the web...",
+    news: "Search news...",
+    ai: "Search or ask a question...",
+    maps: "Search a place or address...",
+    images: "Search images...",
+    videos: "Search videos on YouTube..."
+  };
 
-    function openSearch(url, provider) {
-      searchUrl = url;
+  $("searchInput").placeholder = placeholders[mode];
+  $("searchInputWeb").placeholder = placeholders[mode];
 
-      $("searchProvider").textContent = provider;
-      $("searchStatus").textContent = "Loading " + provider + " results…";
+  updateProviderLabel();
 
-      remember(searchHistory, url);
-      showFrame(searchFrame, $("searchMessage"), true);
-      searchFrame.src = url;
-    }
+  searchFrame.hidden = true;
+  searchFrame.removeAttribute("src");
+  $("searchMessage").style.display = "block";
+  $("searchMessageTitle").textContent = modeTitles[mode];
+  $("searchMessageText").textContent = "Enter a query to get started.";
+  $("searchFallback").hidden = true;
+}
 
-    $("searchForm").addEventListener("submit", event => {
-      event.preventDefault();
+function updateProviderLabel() {
+  let label = "Bing";
 
-      const query = $("searchInput").value.trim();
+  if (currentMode === "web") {
+    label = $("searchEngine").selectedOptions[0].text;
+  } else if (currentMode === "news") {
+    label = $("webNewsSource").selectedOptions[0].text;
+  } else if (currentMode === "ai") {
+    label = $("aiProvider").selectedOptions[0].text;
+  } else if (currentMode === "maps") {
+    label = $("mapsProvider").selectedOptions[0].text;
+  } else if (currentMode === "images") {
+    label = $("imagesProvider").selectedOptions[0].text;
+  } else if (currentMode === "videos") {
+    label = "YouTube";
+  }
 
-      if (!query) {
-        $("searchInput").focus();
-        return;
-      }
+  $("searchProvider").textContent = label;
+}
 
-      const encoded = encodeURIComponent(query);
-      const engine = $("searchEngine").value;
+const newsSources = {
+  bing: {
+    name: "Bing News",
+    url: "https://www.bing.com/news/search?q=",
+    embed: true
+  },
+  npr: {
+    name: "NPR",
+    url: "https://www.npr.org/search?query=",
+    embed: true
+  },
+  google: {
+    name: "Google News",
+    url: "https://news.google.com/search?q=",
+    embed: false
+  },
+  yahoo: {
+    name: "Yahoo News",
+    url: "https://news.yahoo.com/search?p=",
+    embed: false
+  },
+  bbc: {
+    name: "BBC News",
+    url: "https://www.bbc.co.uk/search?q=",
+    embed: false
+  },
+  ap: {
+    name: "Associated Press",
+    url: "https://apnews.com/search?q=",
+    embed: false
+  }
+};
 
-      const searchUrls = {
-        bing: "https://www.bing.com/search?q=" + encoded,
-        yahoo: "https://search.yahoo.com/search?p=" + encoded,
-        wikipedia: "https://en.wikipedia.org/w/index.php?search=" + encoded,
-        dogpile: "https://www.dogpile.com/search?q=" + encoded,
-        ecosia: "https://www.ecosia.org/search?q=" + encoded
-      };
+const webSources = {
+  bing: {
+    name: "Bing",
+    url: q => "https://www.bing.com/search?q=" + q,
+    direct: false
+  },
+  yahoo: {
+    name: "Yahoo",
+    url: q => "https://search.yahoo.com/search?p=" + q,
+    direct: false
+  },
+  wikipedia: {
+    name: "Wikipedia",
+    url: q => "https://en.wikipedia.org/w/index.php?search=" + q,
+    direct: false
+  },
+  dogpile: {
+    name: "Dogpile",
+    url: q => "https://www.dogpile.com/search?q=" + q,
+    direct: true
+  },
+  ecosia: {
+    name: "Ecosia",
+    url: q => "https://www.ecosia.org/search?q=" + q,
+    direct: true
+  }
+};
 
-      const providers = {
-        bing: "Bing",
-        yahoo: "Yahoo",
-        wikipedia: "Wikipedia",
-        dogpile: "Dogpile",
-        ecosia: "Ecosia"
-      };
+const aiSources = {
+  britannica: {
+    name: "Britannica AI",
+    url: "https://www.britannica.com/"
+  },
+  perplexity: {
+    name: "Perplexity",
+    url: "https://www.perplexity.ai/"
+  },
+  chatgpt: {
+    name: "ChatGPT",
+    url: "https://chatgpt.com/"
+  },
+  gemini: {
+    name: "Google Gemini",
+    url: "https://gemini.google.com/"
+  },
+  claude: {
+    name: "Claude",
+    url: "https://claude.ai/"
+  },
+  copilot: {
+    name: "Microsoft Copilot",
+    url: "https://copilot.microsoft.com/"
+  },
+  you: {
+    name: "You.com",
+    url: "https://you.com/"
+  }
+};
 
-      openSearch(searchUrls[engine], providers[engine]);
+function buildSearch(query) {
+  const encoded = encodeURIComponent(query);
 
-      
-    });
+  if (currentMode === "web") {
+    const provider = webSources[$("searchEngine").value] || webSources.bing;
+    return {
+      url: provider.url(encoded),
+      name: provider.name,
+      direct: provider.direct
+    };
+  }
 
-    $("searchBack").addEventListener("click", () => {
-      const previous = navigateBack(
-        searchHistory,
-        searchFrame,
-        $("searchStatus"),
-        "Enter a search to get started"
-      );
+  if (currentMode === "news") {
+    const provider = newsSources[$("webNewsSource").value] || newsSources.bing;
+    return {
+      url: provider.url + encoded,
+      name: provider.name,
+      direct: !provider.embed
+    };
+  }
 
-      if (previous) searchUrl = previous;
-      else $("searchInput").focus();
-    });
+  if (currentMode === "ai") {
+    const provider = aiSources[$("aiProvider").value] || aiSources.chatgpt;
+    return {
+      url: provider.url,
+      name: provider.name,
+      direct: true
+    };
+  }
 
-    $("searchOpen").addEventListener("click", () => {
-      openExternal(searchUrl);
-    });
-
-    $("searchFallback").addEventListener("click", () => {
-      openExternal(searchUrl);
-    });
-
-    // -------------------------
-    // News
-    // -------------------------
-
-    const newsSources = {
+  if (currentMode === "images") {
+    const providers = {
       bing: {
-        name: "Bing News",
-        url: "https://www.bing.com/news",
-        embed: true
+        name: "Bing Images",
+        url: "https://www.bing.com/images/search?q=" + encoded,
+        direct: false
       },
-      npr: {
-        name: "NPR",
-        url: "https://www.npr.org/",
-        embed: true
+      tineye: {
+        name: "TinEye",
+        url: "https://tineye.com/search/?q=" + encoded,
+        direct: true
+      },
+      britannica: {
+        name: "Britannica ImageQuest",
+        url: "https://quest.eb.com/search/" + encoded,
+        direct: true
       },
       google: {
-        name: "Google News",
-        url: "https://news.google.com/",
-        embed: false
+        name: "Google Images",
+        url: "https://www.google.com/search?tbm=isch&q=" + encoded,
+        direct: true
       },
-      yahoo: {
-        name: "Yahoo News",
-        url: "https://news.yahoo.com/",
-        embed: false
+      duckduckgo: {
+        name: "DuckDuckGo Images",
+        url: "https://duckduckgo.com/?iax=images&ia=images&q=" + encoded,
+        direct: true
       },
-      bbc: {
-        name: "BBC News",
-        url: "https://www.bbc.com/news",
-        embed: false
-      },
-      ap: {
-        name: "Associated Press",
-        url: "https://apnews.com/",
-        embed: false
+      wikimedia: {
+        name: "Wikimedia Commons",
+        url: "https://commons.wikimedia.org/w/index.php?search=" + encoded + "&title=Special:MediaSearch&type=image",
+        direct: true
       }
     };
 
-    function selectNews(key, initial = false) {
-      const source = newsSources[key];
-      if (!source) return;
+    return providers[$("imagesProvider").value] || providers.bing;
+  }
 
-      newsUrl = source.url;
-      $("newsStatus").textContent = source.name;
-      $("newsMessageTitle").textContent = "Visit " + source.name;
-      $("newsMessageText").textContent = source.embed
-        ? "If the embedded page does not appear, open the news website directly."
-        : source.name + " does not use the embedded view here. Open it in a new tab.";
-
-      if (source.embed) {
-        $("newsMode").textContent = "Embedded view";
-        remember(newsHistory, source.url);
-        showFrame(newsFrame, $("newsMessage"), true);
-        newsFrame.src = source.url;
-      } else {
-        $("newsMode").textContent = "Direct website";
-        showFrame(newsFrame, $("newsMessage"), false);
-
-        // Do not redirect the entire BlueDesk page.
-        // The user can click Open or Visit news site.
-      }
-    }
-
-    $("newsSource").addEventListener("change", event => {
-      selectNews(event.target.value);
-    });
-
-    $("newsBack").addEventListener("click", () => {
-      const previous = navigateBack(
-        newsHistory,
-        newsFrame,
-        $("newsStatus"),
-        "No previous embedded news page"
-      );
-
-      if (previous) newsUrl = previous;
-    });
-
-    $("newsOpen").addEventListener("click", () => {
-      openExternal(newsUrl);
-    });
-
-    $("newsFallback").addEventListener("click", () => {
-      openExternal(newsUrl);
-    });
-
-    // -------------------------
-    // Educational games
-    // -------------------------
-
-    const gamesSources = {
-      globle: {
-        name: "Globle",
-        url: "https://globle-game.com/",
-        embed: true
-      },
-      quordle: {
-        name: "Quordle",
-        url: "https://www.merriam-webster.com/games/quordle",
-        embed: true
-      },
-      wordle: {
-        name: "Wordle",
-        url: "https://www.nytimes.com/games/wordle/index.html",
-        embed: false
-      },
-      bee: {
-        name: "Spelling Bee",
-        url: "https://www.nytimes.com/puzzles/spelling-bee",
-        embed: false
-      },
-      connections: {
-        name: "Connections",
-        url: "https://www.nytimes.com/games/connections",
-        embed: false
-      },
-      seterra: {
-        name: "Seterra",
-        url: "https://www.geoguessr.com/quiz/seterra",
-        embed: false
-      }
+  if (currentMode === "videos") {
+    return {
+      name: "YouTube",
+      url: "https://www.youtube.com/results?search_query=" + encoded,
+      direct: false,
+      videos: true
     };
+  }
 
-    function selectGame(key) {
-      const game = gamesSources[key];
-      if (!game) return;
+  const mapProvider = $("mapsProvider").value;
 
-      gamesUrl = game.url;
+  if (mapProvider === "mapquest") {
+    return {
+      url: "https://www.mapquest.com/search/results?query=" + encoded,
+      name: "MapQuest",
+      direct: true
+    };
+  }
 
-      $("gamesStatus").textContent = game.name;
-      $("gamesMessageTitle").textContent = "Play " + game.name;
-      $("gamesMessageText").textContent = game.embed
-        ? "If the game cannot load here, open it on its own website."
-        : game.name + " opens on its own website. Select Open to play.";
+  if (mapProvider === "openstreetmap") {
+    return {
+      url: "https://www.openstreetmap.org/search?query=" + encoded,
+      name: "OpenStreetMap",
+      direct: true
+    };
+  }
 
-      if (game.embed) {
-        $("gamesMode").textContent = "Embedded view";
-        remember(gamesHistory, game.url);
-        showFrame(gamesFrame, $("gamesMessage"), true);
-        gamesFrame.src = game.url;
-      } else {
-        $("gamesMode").textContent = "Direct website";
-        showFrame(gamesFrame, $("gamesMessage"), false);
-      }
+  return {
+    url: "https://www.google.com/maps/search/" + encoded,
+    name: "Google Maps",
+    direct: true
+  };
+}
+
+function performSearch(query) {
+  query = query.trim();
+  if (!query) return;
+
+  lastQuery = query;
+  $("searchInput").value = query;
+  $("searchInputWeb").value = query;
+
+  const result = buildSearch(query);
+  searchUrl = result.url;
+  $("searchProvider").textContent = result.name;
+  $("searchStatus").textContent = "Searching for “" + query + "”…";
+
+  remember(searchHistory, result.url);
+  showSearchView();
+
+  if (currentMode === "videos") {
+    searchFrame.hidden = true;
+    $("searchMessage").style.display = "none";
+    mediaResults.hidden = false;
+    searchVideos(query);
+    return;
+  }
+
+  mediaResults.hidden = true;
+  $("searchFallback").hidden = false;
+  $("searchFallback").textContent = "Open results ↗";
+
+  if (result.direct) {
+    showFrame(searchFrame, $("searchMessage"), false);
+    $("searchMessageTitle").textContent = result.name + " opens separately";
+    $("searchMessageText").textContent =
+      "This provider uses its own website. Opening it in a new tab.";
+    openExternal(result.url);
+    $("searchStatus").textContent = result.name + " opened in a new tab.";
+    return;
+  }
+
+  $("searchMessageTitle").textContent = "Open search results";
+  $("searchMessageText").textContent =
+    "If this provider blocks embedding, use Open to view its website separately.";
+
+  showFrame(searchFrame, $("searchMessage"), true);
+  searchFrame.src = result.url;
+}
+
+$("searchForm").addEventListener("submit", event => {
+  event.preventDefault();
+  performSearch($("searchInput").value);
+});
+
+$("searchFormWeb").addEventListener("submit", event => {
+  event.preventDefault();
+  performSearch($("searchInputWeb").value);
+});
+
+document.querySelectorAll(".mode-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    setMode(button.dataset.mode);
+    showSearchView();
+
+    if (lastQuery) {
+      performSearch(lastQuery);
+    } else {
+      $("searchInputWeb").focus();
+    }
+  });
+});
+
+function rerunIfSearching() {
+  updateProviderLabel();
+
+  if (currentView === "search" && lastQuery) {
+    performSearch(lastQuery);
+  }
+}
+
+$("searchEngine").addEventListener("change", rerunIfSearching);
+
+$("webNewsSource").addEventListener("change", () => {
+  syncNewsDropdowns($("webNewsSource").value);
+  rerunIfSearching();
+});
+
+$("aiProvider").addEventListener("change", rerunIfSearching);
+$("mapsProvider").addEventListener("change", rerunIfSearching);
+$("imagesProvider").addEventListener("change", rerunIfSearching);
+$("videosProvider").addEventListener("change", rerunIfSearching);
+
+$("searchBack").addEventListener("click", showHome);
+$("searchOpen").addEventListener("click", () => openExternal(searchUrl));
+$("searchFallback").addEventListener("click", () => openExternal(searchUrl));
+
+/* News Desk */
+function selectNews(key) {
+  const source = newsSources[key];
+  if (!source) return;
+
+  newsUrl = source.url;
+  syncNewsDropdowns(key);
+
+  $("newsStatus").textContent = source.name;
+  $("newsMessageTitle").textContent = "Visit " + source.name;
+  $("newsMessageText").textContent = source.embed
+    ? "If the embedded page does not appear, open the news website directly."
+    : source.name + " is configured to open on its own website.";
+
+  if (source.embed) {
+    $("newsMode").textContent = "Embedded view";
+    remember(newsHistory, source.url);
+    showFrame(newsFrame, $("newsMessage"), true);
+    newsFrame.src = source.url;
+  } else {
+    $("newsMode").textContent = "Direct website";
+    showFrame(newsFrame, $("newsMessage"), false);
+  }
+}
+
+$("newsSource").addEventListener("change", event => {
+  selectNews(event.target.value);
+});
+
+$("newsBack").addEventListener("click", () => {
+  const previous = navigateBack(
+    newsHistory,
+    newsFrame,
+    $("newsStatus"),
+    "No previous embedded news page"
+  );
+
+  if (previous) newsUrl = previous;
+});
+
+$("newsOpen").addEventListener("click", () => openExternal(newsUrl));
+$("newsFallback").addEventListener("click", () => openExternal(newsUrl));
+
+/* Educational games */
+const gamesSources = {
+  globle: {
+    name: "Globle",
+    url: "https://globle-game.com/",
+    embed: true
+  },
+  quordle: {
+    name: "Quordle",
+    url: "https://www.merriam-webster.com/games/quordle",
+    embed: true
+  },
+  wordle: {
+    name: "Wordle",
+    url: "https://www.nytimes.com/games/wordle/index.html",
+    embed: false
+  },
+  bee: {
+    name: "Spelling Bee",
+    url: "https://www.nytimes.com/puzzles/spelling-bee",
+    embed: false
+  },
+  connections: {
+    name: "Connections",
+    url: "https://www.nytimes.com/games/connections",
+    embed: false
+  },
+  seterra: {
+    name: "Seterra",
+    url: "https://www.geoguessr.com/quiz/seterra",
+    embed: false
+  }
+};
+
+function selectGame(key) {
+  const game = gamesSources[key];
+  if (!game) return;
+
+  gamesUrl = game.url;
+  $("gamesStatus").textContent = game.name;
+  $("gamesMessageTitle").textContent = "Play " + game.name;
+  $("gamesMessageText").textContent = game.embed
+    ? "If the game cannot load here, open it on its own website."
+    : game.name + " opens on its own website. Select Open to play.";
+
+  if (game.embed) {
+    $("gamesMode").textContent = "Embedded view";
+    remember(gamesHistory, game.url);
+    showFrame(gamesFrame, $("gamesMessage"), true);
+    gamesFrame.src = game.url;
+  } else {
+    $("gamesMode").textContent = "Direct website";
+    showFrame(gamesFrame, $("gamesMessage"), false);
+  }
+}
+
+$("gameSource").addEventListener("change", event => {
+  selectGame(event.target.value);
+});
+
+$("gamesBack").addEventListener("click", () => {
+  const previous = navigateBack(
+    gamesHistory,
+    gamesFrame,
+    $("gamesStatus"),
+    "No previous embedded game"
+  );
+
+  if (previous) gamesUrl = previous;
+});
+
+$("gamesOpen").addEventListener("click", () => openExternal(gamesUrl));
+$("gamesFallback").addEventListener("click", () => openExternal(gamesUrl));
+
+searchFrame.addEventListener("load", () => {
+  if (searchUrl && !searchFrame.hidden) {
+    $("searchStatus").textContent =
+      "Page loaded or attempted. If blank, select Open.";
+  }
+});
+
+newsFrame.addEventListener("load", () => {
+  $("newsStatus").textContent =
+    "News page loaded or attempted. If blank, select Open.";
+});
+
+gamesFrame.addEventListener("load", () => {
+  $("gamesStatus").textContent =
+    "Game page loaded or attempted. If blank, select Open.";
+});
+
+/* YouTube Data API v3 key management */
+const YOUTUBE_KEY_STORAGE = "bluedesk_youtube_api_key";
+
+function getYoutubeApiKey() {
+  return $("youtubeApiKey").value.trim() ||
+    localStorage.getItem(YOUTUBE_KEY_STORAGE) || "";
+}
+
+$("youtubeApiKey").value = localStorage.getItem(YOUTUBE_KEY_STORAGE) || "";
+
+$("saveYoutubeKey").addEventListener("click", () => {
+  const key = $("youtubeApiKey").value.trim();
+
+  if (!key) {
+    localStorage.removeItem(YOUTUBE_KEY_STORAGE);
+    $("searchStatus").textContent = "API key cleared. Enter a key to load video cards.";
+    return;
+  }
+
+  localStorage.setItem(YOUTUBE_KEY_STORAGE, key);
+  $("searchStatus").textContent = "API key saved in this browser.";
+
+  if (currentMode === "videos" && lastQuery) {
+    searchVideos(lastQuery);
+  }
+});
+
+$("clearYoutubeKey").addEventListener("click", () => {
+  localStorage.removeItem(YOUTUBE_KEY_STORAGE);
+  $("youtubeApiKey").value = "";
+  $("searchStatus").textContent = "Saved API key cleared.";
+});
+
+async function searchVideos(query) {
+  const apiKey = getYoutubeApiKey();
+
+  mediaResults.hidden = false;
+  mediaResults.innerHTML =
+    '<div class="media-empty">Searching YouTube…</div>';
+
+  $("searchFallback").hidden = false;
+  $("searchFallback").textContent = "Open YouTube results ↗";
+
+  searchUrl = "https://www.youtube.com/results?search_query=" +
+    encodeURIComponent(query);
+
+  if (!apiKey) {
+    mediaResults.innerHTML =
+      '<div class="media-empty">' +
+      '<h3>Video cards need a YouTube API key</h3>' +
+      '<p>Paste your YouTube Data API v3 key above and select Save key. ' +
+      'You can also open normal YouTube search results.</p></div>';
+
+    $("searchStatus").textContent =
+      "Enter a YouTube API key or open YouTube results.";
+    return;
+  }
+
+  try {
+    const endpoint =
+      "https://www.googleapis.com/youtube/v3/search" +
+      "?part=snippet&type=video&maxResults=24" +
+      "&q=" + encodeURIComponent(query) +
+      "&key=" + encodeURIComponent(apiKey);
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+      throw new Error(
+        data.error?.message || "YouTube API request failed."
+      );
     }
 
-    $("gameSource").addEventListener("change", event => {
-      selectGame(event.target.value);
+    displayVideos(data.items || []);
+    $("searchStatus").textContent =
+      (data.items || []).length + " YouTube videos found.";
+  } catch (error) {
+    mediaResults.innerHTML =
+      '<div class="media-empty">' +
+      '<h3>Could not load video results</h3>' +
+      '<p>' + escapeHtml(error.message) +
+      ' Check your API key, API restrictions, and YouTube Data API quota.</p>' +
+      '<button class="primary-btn" type="button" id="openYoutubeFallback">' +
+      'Open YouTube results ↗</button></div>';
+
+    $("openYoutubeFallback").addEventListener("click", () => {
+      openExternal(searchUrl);
     });
 
-    $("gamesBack").addEventListener("click", () => {
-      const previous = navigateBack(
-        gamesHistory,
-        gamesFrame,
-        $("gamesStatus"),
-        "No previous embedded game"
-      );
+    $("searchStatus").textContent = "YouTube API search failed.";
+  }
+}
 
-      if (previous) gamesUrl = previous;
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function displayVideos(videos) {
+  mediaResults.innerHTML = "";
+
+  const validVideos = videos.filter(video => video.id?.videoId);
+
+  if (!validVideos.length) {
+    mediaResults.innerHTML =
+      '<div class="media-empty">No videos found. Try another search.</div>';
+    return;
+  }
+
+  validVideos.forEach(video => {
+    const id = video.id.videoId;
+    const snippet = video.snippet || {};
+    const card = document.createElement("button");
+
+    card.type = "button";
+    card.className = "media-card";
+
+    const thumbnail =
+      snippet.thumbnails?.medium?.url ||
+      snippet.thumbnails?.default?.url || "";
+
+    card.innerHTML =
+      '<img src="' + escapeHtml(thumbnail) + '" alt="">' +
+      '<h3>' + escapeHtml(snippet.title) + '</h3>' +
+      '<p>' + escapeHtml(snippet.channelTitle) + '</p>';
+
+    card.addEventListener("click", () => {
+      openVideoOverlay(id, snippet.title || "YouTube video");
     });
 
-    $("gamesOpen").addEventListener("click", () => {
-      openExternal(gamesUrl);
-    });
+    mediaResults.appendChild(card);
+  });
+}
 
-    $("gamesFallback").addEventListener("click", () => {
-      openExternal(gamesUrl);
-    });
+function openVideoOverlay(videoId, title) {
+  currentVideoId = videoId;
+  currentVideoTitle = title;
 
-    // -------------------------
-    // Frame status
-    // -------------------------
-    // An iframe load event does not guarantee that the remote website
-    // allowed its content to be displayed.
+  $("videoOverlayTitle").textContent = title;
+  $("videoOverlay").style.display = "flex";
+  $("videoDetails").innerHTML = "<p>Loading video details…</p>";
 
-    searchFrame.addEventListener("load", () => {
-      if (searchUrl) {
-        $("searchStatus").textContent =
-          "Search page loaded or attempted. If blank, select Open.";
-      }
-    });
+  loadVideoPlayer();
+  $("videoOverlay").scrollTo(0, 0);
+}
 
-    newsFrame.addEventListener("load", () => {
-      $("newsStatus").textContent =
-        "News page loaded or attempted. If blank, select Open.";
-    });
+function loadVideoPlayer() {
+  if (!currentVideoId) return;
 
-    gamesFrame.addEventListener("load", () => {
-      $("gamesStatus").textContent =
-        "Game page loaded or attempted. If blank, select Open.";
-    });
+  const source = $("videoPlayerSource").value;
+  const id = encodeURIComponent(currentVideoId);
 
-    // Initialize the sections without redirecting the user.
-    selectNews("bing", true);
-    selectGame("globle");
-  </script>
+  const playerUrls = {
+    youtube: "https://www.youtube.com/embed/" + id + "?autoplay=1",
+    "youtube-nocookie": "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1",
+    invidious: "https://invidious.nerdvpn.de/embed/" + id,
+    piped: "https://piped.video/embed/" + id,
+    youtubeapi: "https://www.youtube.com/embed/" + id
+  };
+
+  $("videoPlayer").innerHTML =
+    '<iframe title="Video player" src="' + playerUrls[source] +
+    '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; ' +
+    'gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+
+  loadVideoDetails(currentVideoId);
+}
+
+$("videoPlayerSource").addEventListener("change", loadVideoPlayer);
+
+$("closeVideoOverlay").addEventListener("click", () => {
+  $("videoOverlay").style.display = "none";
+  $("videoPlayer").innerHTML = "";
+  currentVideoId = "";
+});
+
+$("videoOverlay").addEventListener("click", event => {
+  if (event.target === $("videoOverlay")) {
+    $("closeVideoOverlay").click();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    $("videoOverlay").style.display === "flex"
+  ) {
+    $("closeVideoOverlay").click();
+  }
+});
+
+async function loadVideoDetails(videoId) {
+  const apiKey = getYoutubeApiKey();
+
+  if (!apiKey) {
+    $("videoDetails").innerHTML =
+      '<h3>' + escapeHtml(currentVideoTitle) + '</h3>' +
+      '<p>Enter a YouTube API key to load additional video details.</p>';
+    return;
+  }
+
+  try {
+    const endpoint =
+      "https://www.googleapis.com/youtube/v3/videos" +
+      "?part=snippet,statistics&id=" + encodeURIComponent(videoId) +
+      "&key=" + encodeURIComponent(apiKey);
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (!response.ok || !data.items?.length) {
+      throw new Error("Video details are unavailable.");
+    }
+
+    const item = data.items[0];
+    const snippet = item.snippet || {};
+    const stats = item.statistics || {};
+
+    $("videoDetails").innerHTML =
+      '<h3>' + escapeHtml(snippet.title || currentVideoTitle) + '</h3>' +
+      '<p><strong>Channel:</strong> ' +
+      escapeHtml(snippet.channelTitle || "Unavailable") +
+      '<br><strong>Views:</strong> ' +
+      escapeHtml(stats.viewCount
+        ? Number(stats.viewCount).toLocaleString()
+        : "Unavailable") +
+      '<br><strong>Likes:</strong> ' +
+      escapeHtml(stats.likeCount
+        ? Number(stats.likeCount).toLocaleString()
+        : "Unavailable") + '</p>' +
+      '<p>' + escapeHtml(snippet.description || "No description available.") + '</p>';
+  } catch (_) {
+    $("videoDetails").innerHTML =
+      '<h3>' + escapeHtml(currentVideoTitle) + '</h3>' +
+      '<p>Additional video details could not be loaded. Check your API key and quota.</p>';
+  }
+}
+
+/* Initial state */
+webSection.hidden = true;
+selectNews("bing");
+selectGame("globle");
+setMode("web");
+showHome();
+</script>
 </body>
 </html>
